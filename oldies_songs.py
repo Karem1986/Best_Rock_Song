@@ -10,7 +10,7 @@ root=tk.Tk()
 root.resizable(0,0)
 
 # To Insert a title to the created root window
-root.title('Best rock song!')
+root.title('Oldies but goodies!')
 
 # Intilaizing the mixer module
 mixer.init()
@@ -18,19 +18,32 @@ mixer.init()
 # Function to play the song
 def play_nickelback():
     try:
-        mixer.music.load("Nickelback - Someday - 01 Someday.mp3")
-        mixer.music.play()
+        print("Available songs: Agnes, Nickelback: someday, Nickelback: how you remind me, Blind date and High School basketball game.")
+        user_question = input("Which rock song do you want to listen?")
+        
+        if user_question.lower() == "nickelback":
+            mixer.music.load("songs/Nickelback - Someday - 01 Someday.mp3")
+            mixer.music.play()
+        elif user_question.lower() == "agnes":
+            mixer.music.load("songs/Agnes.mp3")
+            mixer.music.play()
+        elif user_question.lower() == "blind date":
+            mixer.music.load("songs/Blind Date.mp3")
+            mixer.music.play()
+        elif user_question.lower() == "high school basketball":
+            mixer.music.load("songs/High School Basketball Game.mp3")
+            mixer.music.play()
+            
     except Exception as e:
         print(f"Error playing song: {e}")
         
-# Function to pause the song which is currently playing
+# Function to pause the song currently playing
 def pause():
     mixer.music.pause()
 
 # Function to resume the song which has paused
 def resume():
     mixer.music.unpause()
-
 
 # Function to stop the currently playing song
 def stop():
@@ -44,7 +57,10 @@ playlist.grid(columnspan=4)
 label = Label(root, text = "Songs") 
 
 # add the songs
-playlist.insert(0, "Someday - Somehow")
+# playlist.insert(0, "Someday - Somehow")
+# playlist.insert(0, "Someday - Somehow")
+# playlist.insert(0, "Someday - Somehow")
+# playlist.insert(0, "Someday - Somehow")
 
 # Bottoms for listening, pause, resume and stop
 listenbtn = tk.Button(root, text="Listening", command=play_nickelback, bg='blue', fg='white')
