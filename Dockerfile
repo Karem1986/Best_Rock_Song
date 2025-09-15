@@ -1,18 +1,16 @@
 FROM python:slim-trixie
 
-# Set the working directory
 WORKDIR /app
 
-# Copy application files
 COPY . /app
 
-# Install dependencies
-COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the application on:
+# Following container security best practices by creating a dedicated system user with no shell access or unnecessary files. This minimizes risk and keeps our image lean
+RUN groupadd -r oldies && useradd --no-log-init -r -g oldies oldies
+RUN chown -R oldies:oldies /app
+USER oldies
+
 EXPOSE 8080
 
-# Run the application
-# CMD ["python", "rescue_interactive.py"]
 CMD ["python", "oldies_songs.py"]

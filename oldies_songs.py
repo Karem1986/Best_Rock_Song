@@ -1,79 +1,46 @@
-# Play the song after clicking on 'listening'
-import tkinter as tk
-from pygame import mixer
-from tkinter import *
+from flask import Flask, render_template_string, send_from_directory
+import os
 
-# Creating interface or root window
-root=tk.Tk()
+app = Flask(__name__)
 
-# To make the size of the window static
-root.resizable(0,0)
+SONG_FOLDER = "songs"
+SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
 
-# To Insert a title to the created root window
-root.title('Oldies but goodies!')
+HTML = """
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Oldies but Goodies</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; background: #fdf6e3; }
+    h1 { font-size: 2em; margin-bottom: 1em; }
+    .song { margin-bottom: 2em; }
+    audio { width: 100%; max-width: 400px; }
+  </style>
+</head>
+<body>
+  <h1>🎶 Oldies but Goodies</h1>
+  {% for song in songs %}
+    <div class="song">
+      <p><strong>{{ song }}</strong></p>
+      <audio controls>
+        <source src="/songs/{{ song }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  {% endfor %}
+</body>
+</html>
+"""
 
-# Intilaizing the mixer module
-mixer.init()
+@app.route("/")
+def index():
+    return render_template_string(HTML, songs=SONGS)
 
-# Function to play the song
-def play_nickelback():
-    try:
-        print("Available songs: Agnes, Nickelback: someday, Nickelback: how you remind me, Blind date and High School basketball game.")
-        user_question = input("Which rock song do you want to listen?")
-        
-        if user_question.lower() == "nickelback":
-            mixer.music.load("songs/Nickelback - Someday - 01 Someday.mp3")
-            mixer.music.play()
-        elif user_question.lower() == "agnes":
-            mixer.music.load("songs/Agnes.mp3")
-            mixer.music.play()
-        elif user_question.lower() == "blind date":
-            mixer.music.load("songs/Blind Date.mp3")
-            mixer.music.play()
-        elif user_question.lower() == "high school basketball":
-            mixer.music.load("songs/High School Basketball Game.mp3")
-            mixer.music.play()
-            
-    except Exception as e:
-        print(f"Error playing song: {e}")
-        
-# Function to pause the song currently playing
-def pause():
-    mixer.music.pause()
+@app.route("/songs/<path:filename>")
+def serve_song(filename):
+    return send_from_directory(SONG_FOLDER, filename)
 
-# Function to resume the song which has paused
-def resume():
-    mixer.music.unpause()
-
-# Function to stop the currently playing song
-def stop():
-    mixer.music.stop()
-
-# Creating a listbox where the list of songs are going to be displayed
-playlist = tk.Listbox(root, selectmode=tk.SINGLE, bg="white", fg="black", font=('arial', 10), width=40)
-playlist.grid(columnspan=4)
-
-# Define a label for the list.  
-label = Label(root, text = "Songs") 
-
-# add the songs
-# playlist.insert(0, "Someday - Somehow")
-# playlist.insert(0, "Someday - Somehow")
-# playlist.insert(0, "Someday - Somehow")
-# playlist.insert(0, "Someday - Somehow")
-
-# Bottoms for listening, pause, resume and stop
-listenbtn = tk.Button(root, text="Listening", command=play_nickelback, bg='blue', fg='white')
-listenbtn.grid(row=1, column=0)
-
-pausebtn = tk.Button(root, text="Pause", command=pause, bg='yellow', fg='black')
-pausebtn.grid(row=1, column=1)
-
-resumebtn = tk.Button(root, text="Resume", command=resume, bg='green', fg='white')
-resumebtn.grid(row=1, column=2)
-
-stopbtn = tk.Button(root, text="Stop", command=stop, bg='red', fg='white')
-stopbtn.grid(row=1, column=3)
-
-# To execute the output window
-root.mainloop()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
