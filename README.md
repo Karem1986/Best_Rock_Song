@@ -1,6 +1,6 @@
 # Goal of this app
 
-This app has the goal to show how containerization works, how to make containerized app secure and finally to show clean Python structured code. Aimed to showcase Python and Docker skills.
+This app has the goal to show how containerization works, how to make a containerized app secure and finally to show clean Python structured code. Aimed to showcase Python and Docker skills.
 
 ## Which security measures has this app implemented?
 

@@ -1,7 +1,16 @@
 from flask import Flask, render_template_string, send_from_directory
 import os
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+
+load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
+
+# PostgreSQL configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+
+db = SQLAlchemy(app)
 
 SONG_FOLDER = "songs"
 SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
