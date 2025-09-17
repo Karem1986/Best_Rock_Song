@@ -2,15 +2,30 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+    favorites = db.relationship('Favorite', back_populates='user')
+
 class Song(db.Model):
     __tablename__ = 'songs'
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     artist = db.Column(db.String(120), nullable=True)
-    genre = db.Column(db.String(200), nullable=False)
-    filepath = db.Column(db.String(200), nullable=False)
-    
+    filename = db.Column(db.String(200), nullable=False)
 
-    def __repr__(self):
-        return f"<Song {self.title} by {self.artist}>"
+    favorites = db.relationship('Favorite', back_populates='song')
+
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
+
+    user = db.relationship('User', back_populates='favorites')
+    song = db.relationship('Song', back_populates='favorites')
+
