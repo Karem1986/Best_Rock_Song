@@ -1,13 +1,17 @@
-from flask import Flask, render_template_string, send_from_directory
+print("✅ Starting!")
+from flask import Flask, render_template_string, send_from_directory, request, jsonify
 import os
-from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 # IMPORT SCHEMAS:
-from backend.schema.dbmodels import db, Song
+from backend.schema.dbmodels import db, Song, User, Favorite
 
 load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
+
+@app.route("/test", methods=["GET"])
+def test():
+    return "Route works", 200
 
 # PostgreSQL configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
@@ -53,5 +57,17 @@ def index():
 def serve_song(filename):
     return send_from_directory(SONG_FOLDER, filename)
 
+
+@app.route("/ping", methods=['GET'])
+def ping():
+  print("✅ /ping route registered")
+  return jsonify({'message': 'pong'}), 200
+
+# Route for sign up
+@app.route("/signup", methods=["GET"])
+def signup_get():
+    return jsonify({"error": "Use POST method to register"}), 405
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+  print("✅ Flask app is starting")
+  app.run(host="0.0.0.0", port=8080, debug=True)

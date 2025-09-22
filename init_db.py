@@ -1,5 +1,5 @@
 # init_db.py
-from oldies_songs import app
+from main_app import app
 from backend.schema.dbmodels import db
 
 with app.app_context():

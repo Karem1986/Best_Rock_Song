@@ -1,4 +1,4 @@
-from oldies_songs import app
+from main_app import app
 from backend.schema.dbmodels import db
 from sqlalchemy import text
 
