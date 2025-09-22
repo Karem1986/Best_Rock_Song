@@ -57,11 +57,35 @@ def index():
 def serve_song(filename):
     return send_from_directory(SONG_FOLDER, filename)
 
-
+# Get fallback to prevent hitting the wrong route endpoint
 @app.route("/ping", methods=['GET'])
 def ping():
   print("✅ /ping route registered")
   return jsonify({'message': 'pong'}), 200
+
+@app.route("/signup", methods=["POST"])
+def signup_post():
+    print("✅ /signup POST route hit")
+    data = request.get_json()
+    print("📦 Received data:", data)
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    if not username or not email or not password:
+        return jsonify({'error': 'Missing mandatory fields'}), 400
+
+    if User.query.filter((User.username == username) | (User.email == email)).first():
+        return jsonify({'error': 'Username or email already exists'}), 409
+
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'message': 'User registered successfully'}), 201
+
 
 # Route for sign up
 @app.route("/signup", methods=["GET"])
