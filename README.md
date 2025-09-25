@@ -12,8 +12,6 @@ Reduces the risk of hacking due to privileges not being restricted
 
 Limits the damage if the app is compromised
 
-Aligns with security best practices for containerized applications
-
 - Passwords:
 
 We are using Werkzeug as to protect the passwords from being hacked.
