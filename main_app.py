@@ -66,6 +66,7 @@ def ping():
 @app.route("/signup", methods=["POST"])
 def signup_post():
     print("✅ /signup POST route hit")
+    # No data was being sent in the body of the request, that was causing the error: No method allowed. 
     data = request.get_json()
     print("📦 Received data:", data)
 
@@ -87,10 +88,10 @@ def signup_post():
     return jsonify({'message': 'User registered successfully'}), 201
 
 
-# Route for sign up
-@app.route("/signup", methods=["GET"])
-def signup_get():
-    return jsonify({"error": "Use POST method to register"}), 405
+# # Route for sign up faalback
+# @app.route("/signup", methods=["GET"])
+# def signup_get():
+#     return jsonify({"error": "Use POST method to register"}), 405
 
 if __name__ == "__main__":
   print("✅ Flask app is starting")
