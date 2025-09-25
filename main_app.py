@@ -1,4 +1,4 @@
-print("✅ Starting!")
+# print("✅ Starting!")
 from flask import Flask, render_template_string, send_from_directory, request, jsonify
 import os
 from dotenv import load_dotenv
@@ -57,18 +57,12 @@ def index():
 def serve_song(filename):
     return send_from_directory(SONG_FOLDER, filename)
 
-# Get fallback to prevent hitting the wrong route endpoint
-@app.route("/ping", methods=['GET'])
-def ping():
-  print("✅ /ping route registered")
-  return jsonify({'message': 'pong'}), 200
-
 @app.route("/signup", methods=["POST"])
 def signup_post():
     print("✅ /signup POST route hit")
     # No data was being sent in the body of the request, that was causing the error: No method allowed. 
     data = request.get_json()
-    print("📦 Received data:", data)
+    print("Sending data with curl in the body:", data)
 
     username = data.get('username')
     email = data.get('email')
