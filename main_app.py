@@ -87,12 +87,6 @@ def signup_post():
 
     return jsonify({'message': 'User registered successfully'}), 201
 
-
-# # Route for sign up faalback
-# @app.route("/signup", methods=["GET"])
-# def signup_get():
-#     return jsonify({"error": "Use POST method to register"}), 405
-
 if __name__ == "__main__":
   print("✅ Flask app is starting")
   app.run(host="0.0.0.0", port=8080, debug=True)
