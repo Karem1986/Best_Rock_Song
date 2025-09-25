@@ -38,3 +38,7 @@ More information at:
 <https://www.digitalocean.com/community/tutorials/processing-incoming-request-data-in-flask>
 
 In "Usin JSON Data".
+
+## Next steps
+
+Explore new tools like apache airflow and https://www.getdbt.com/blog/what-exactly-is-dbt
