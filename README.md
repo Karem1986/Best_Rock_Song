@@ -18,3 +18,25 @@ Aligns with security best practices for containerized applications
 
 We are using Werkzeug as to protect the passwords from being hacked.
 More information about it can be found at: https://techmonger.github.io/4/secure-passwords-werkzeug/
+
+## Testing flask routes
+
+For this I used Curl and Postman. 
+If testing with Curl, first start the server with:
+
+```python main_app.py```
+
+Optionally, use postman but delete trailing spaces right after the url with the backspace keyboard. Select POST from the dropdown menu and in select in headers raw/JSON.
+
+Curl command example:
+
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"username":"karin","email":"<email@email.com>","password":"5555"}' \
+<http://127.0.0.1:8080/signup>
+
+Be aware that testing this command will only work in git bash, powershell requires a different syntax.
+More information at:
+
+<https://www.digitalocean.com/community/tutorials/processing-incoming-request-data-in-flask>
+
+In "Usin JSON Data".
