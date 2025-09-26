@@ -19,7 +19,7 @@ More information about it can be found at: https://techmonger.github.io/4/secure
 
 ## Testing flask routes
 
-For this I used Curl and Postman. 
+For this I used Curl and Postman.
 If testing with Curl, first start the server with:
 
 ```python main_app.py```

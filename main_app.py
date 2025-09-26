@@ -1,22 +1,34 @@
-# print("✅ Starting!")
-from flask import Flask, render_template_string, send_from_directory, request, jsonify
+from flask import Flask, render_template_string, send_from_directory, request, jsonify, render_template, request, url_for, redirect
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
+
 # IMPORT SCHEMAS:
-from backend.schema.dbmodels import db, Song, User, Favorite
+from backend.schema.dbmodels import db, Song, Users, Favorite
 
 load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY") or "dev-key"
 
-@app.route("/test", methods=["GET"])
-def test():
-    return "Route works", 200
+# Initialize login manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+# Load user for Flask-Login/Retrieve user by id
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
 
 # PostgreSQL configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 SONG_FOLDER = "songs"
 SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
@@ -71,15 +83,46 @@ def signup_post():
     if not username or not email or not password:
         return jsonify({'error': 'Missing mandatory fields'}), 400
 
-    if User.query.filter((User.username == username) | (User.email == email)).first():
+    if Users.query.filter((Users.username == username) | (Users.email == email)).first():
         return jsonify({'error': 'Username or email already exists'}), 409
 
-    user = User(username=username, email=email)
+    user = Users(username=username, email=email)
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
+  
+# Login route
+@app.route("/login", methods=["GET", "POST"])
+def user_login():
+    print("✅ /login route hit")
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        user = Users.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for("dashboard"))
+        else:
+            return render_template("login.html", error="Invalid username or password")
+
+    return render_template("login.html")
+
+# Protected dashboard route
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template("dashboard.html", username=current_user.username)
+
+# Logout route
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
   print("✅ Flask app is starting")
