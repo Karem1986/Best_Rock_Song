@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string, send_from_directory, request, jsonify, render_template, request, url_for, redirect
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 import os
 from dotenv import load_dotenv
 
@@ -10,6 +10,7 @@ from backend.schema.dbmodels import db, Song, Users, Favorite
 load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
+# Enable flask_login with the secret key
 app.secret_key = os.getenv("SECRET_KEY") or "dev-key"
 
 # Initialize login manager
@@ -30,44 +31,13 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-SONG_FOLDER = "songs"
-SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
 
-HTML = """
-<!doctype html>
-<html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oldies but Goodies</title>
-  <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; background: #fdf6e3; }
-    h1 { font-size: 2em; margin-bottom: 1em; }
-    .song { margin-bottom: 2em; }
-    audio { width: 100%; max-width: 400px; }
-  </style>
-</head>
-<body>
-  <h1>🎶 Oldies but Goodies</h1>
-  {% for song in songs %}
-    <div class="song">
-      <p><strong>{{ song }}</strong></p>
-      <audio controls>
-        <source src="/songs/{{ song }}" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-    </div>
-  {% endfor %}
-</body>
-</html>
-"""
-
-@app.route("/")
-def index():
-    return render_template_string(HTML, songs=SONGS)
-
-@app.route("/songs/<path:filename>")
-def serve_song(filename):
-    return send_from_directory(SONG_FOLDER, filename)
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    SONG_FOLDER = "songs"
+    SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
+    return render_template("dashboard.html", username=current_user.username, songs=SONGS)
 
 @app.route("/signup", methods=["POST"])
 def signup_post():

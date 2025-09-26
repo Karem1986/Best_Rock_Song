@@ -1,19 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        h1 { color: green; }
-    </style>
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
-    <h1>You are logged in as {{ username }}!</h1>
-</body>
-</html>
+<h1>Oldies but Goodies</h1>
+{% for song in songs %}
+  <div class="song">
+    <p><strong>{{ song }}</strong></p>
+    <audio controls>
+      <source src="{{ url_for('serve_song', filename=song) }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+{% endfor %}
