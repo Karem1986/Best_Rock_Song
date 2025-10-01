@@ -10,7 +10,7 @@ from backend.schema.dbmodels import db, Song, Users, Favorite
 load_dotenv()  # Load variables from .env
 
 app = Flask(__name__)
-# Enable flask_login with the secret key
+# Enable flask_login with the secret key, without it login does not work.
 app.secret_key = os.getenv("SECRET_KEY") or "dev-key"
 
 # Initialize login manager
@@ -25,19 +25,23 @@ def load_user(user_id):
 
 # PostgreSQL configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-
+# First create the database!
 db.init_app(app)
-
+# Then create the tables!
 with app.app_context():
     db.create_all()
 
-
+# Create app routes
 @app.route("/dashboard")
 @login_required
 def dashboard():
     SONG_FOLDER = "songs"
     SONGS = [f for f in os.listdir(SONG_FOLDER) if f.endswith(".mp3")]
     return render_template("dashboard.html", username=current_user.username, songs=SONGS)
+  
+@app.route("/songs/<path:filename>")
+def serve_song(filename):
+    return send_from_directory("songs", filename)
 
 @app.route("/signup", methods=["POST"])
 def signup_post():
