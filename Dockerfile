@@ -6,7 +6,7 @@ COPY . /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Following container security best practices by creating a dedicated system user with no root access. This minimizes riskS.
+# Following container security best practices by creating a dedicated system user with no root access. This minimizes risks.
 RUN groupadd -r oldies && useradd --no-log-init -r -g oldies oldies
 RUN chown -R oldies:oldies /app
 USER oldies

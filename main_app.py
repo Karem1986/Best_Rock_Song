@@ -1,5 +1,5 @@
-from flask import Flask, render_template_string, send_from_directory, request, jsonify, render_template, request, url_for, redirect
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask import Flask, send_from_directory, request, jsonify, render_template, request, url_for, redirect
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
 import os
 from dotenv import load_dotenv

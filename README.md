@@ -39,6 +39,14 @@ More information at:
 
 In "Usin JSON Data".
 
+Also here important info about flask integration with PostgreSQL:
+
+<https://codezup.com/integrating-flask-with-postgresql-comprehensive-tutorial/>
+
 ## Next steps
 
 Explore new tools like apache airflow and <https://www.getdbt.com/blog/what-exactly-is-dbt>
+
+Check and fix Dockerfile high vulnerability with Trivy, more info at:
+
+<https://medium.com/@suyashchandra1610/docker-image-vulnerability-scanning-and-resolution-022ce9c591b2>
